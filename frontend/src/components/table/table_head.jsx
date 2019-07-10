@@ -49,7 +49,13 @@ export default function TableHeadEnhanced(props) {
         </TableCell>
         {
           columnHeads.reduce((accu, head, idx) => {
-            if (!hiddenColumns.includes(head)) {
+            if (
+              !hiddenColumns.includes(head) &&
+              head !== "street_address" &&
+              head !== "city" &&
+              head !== "state" &&
+              head !== "zip"
+            ) {
               accu.push(
                 <TableCell
                   key={idx}

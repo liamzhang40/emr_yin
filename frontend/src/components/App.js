@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-// import { Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { AuthRoute, ProtectRoute } from '../utils/route_utils';
 import SessionFormContainer from './forms/session_form_container';
 import Dashboard from './dashboard/dashboard';

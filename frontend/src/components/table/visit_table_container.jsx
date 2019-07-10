@@ -5,7 +5,7 @@ import Table from './table';
 const mapStateToProps = (state, ownProps) => ({
   // rows: state.entities.patients,
   // columnHeads: state.entities.columHeads,
-  defaultRowsPerPage: Math.floor((window.innerHeight - 64 - 20 - 20 - 31.25 - 64 - 48 - 56 - 20) / 47.5),
+  defaultRowsPerPage: Math.floor((window.innerHeight - 64 - 20 - 20 - 31.25 - 64 - 48 - 56 - 20) / 40),
   tableTitle: "visit",
   path: `${ownProps.match.url}/visit/`,
 });

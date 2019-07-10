@@ -3,7 +3,8 @@ import {
   fetchPatient,
   updatePatient,
   createPatient,
- } from '../../actions/patient_actions';
+} from '../../actions/patient_actions';
+import { states } from '../../utils/table_utils';
 import PatientForm from './patient_form';
 
 const mapStateToProps = (state, ownProps) => {
@@ -33,11 +34,17 @@ const mapStateToProps = (state, ownProps) => {
             xs: 12,
             sm: 4,
             variant: 'filled',
+            componentType: "select",
+            options: [
+              { value: "M", text: "M" },
+              { value: "F", text: "F" },
+            ]
           },
           date_of_birth: {
             required: true,
             xs: 12,
             sm: 4,
+            type: "date",
             variant: 'filled',
           },
           age: {
@@ -56,6 +63,34 @@ const mapStateToProps = (state, ownProps) => {
             xs: 12,
             sm: 6,
             type: "email",
+            variant: 'filled',
+          },
+          street_address: {
+            required: true,
+            xs: 12,
+            variant: 'filled',
+          },
+          city: {
+            required: true,
+            xs: 12,
+            sm: 4,
+            variant: 'filled',
+          },
+          state: {
+            required: true,
+            xs: 12,
+            sm: 4,
+            variant: 'filled',
+            componentType: "select",
+            options: states.map(stateObj => ({
+              value: stateObj.abbreviation,
+              text: stateObj.abbreviation,
+            }))
+          },
+          zip: {
+            required: true,
+            xs: 12,
+            sm: 4,
             variant: 'filled',
           },
           description: {
@@ -101,6 +136,7 @@ const mapStateToProps = (state, ownProps) => {
             required: true,
             xs: 12,
             sm: 4,
+            type: "date",
             variant: 'filled',
           },
           age: {
@@ -122,6 +158,38 @@ const mapStateToProps = (state, ownProps) => {
             xs: 12,
             sm: 6,
             type: "email",
+            variant: 'filled',
+          },
+          street_address: {
+            value: patient.street_address,
+            required: true,
+            xs: 12,
+            variant: 'filled',
+          },
+          city: {
+            value: patient.city,
+            required: true,
+            xs: 12,
+            sm: 4,
+            variant: 'filled',
+          },
+          state: {
+            value: patient.state,
+            required: true,
+            xs: 12,
+            sm: 4,
+            variant: 'filled',
+            componentType: "select",
+            options: states.map(stateObj => ({
+              value: stateObj.abbreviation,
+              text: stateObj.abbreviation,
+            }))
+          },
+          zip: {
+            value: patient.zip,
+            required: true,
+            xs: 12,
+            sm: 4,
             variant: 'filled',
           },
           description: {

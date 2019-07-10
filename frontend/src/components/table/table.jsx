@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 // import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -15,13 +15,13 @@ import TableHeadEnhanced from './table_head';
 import TableToolbarEnhanced from './table_toolbar';
 
 function stableSort(array, cmp) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = cmp(a[0], b[0]);
+  array.sort((a, b) => {
+    const order = cmp(a, b);
     if (order !== 0) return order;
-    return a[1] - b[1];
+    return 1;
   });
-  return stabilizedThis.map(el => el[0]);
+
+  return array;
 }
 
 function getSorting(order, orderBy) {
@@ -48,23 +48,33 @@ const useStyles = makeStyles(theme => ({
   tableWrapper: {
     overflowX: 'auto',
   },
+  tableCell: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    height: 28,
+  }
 }));
 
 export default function TableEnhanced(props) {
   const { rows, columnHeads, defaultRowsPerPage, tableTitle, path, deletePatients } = props;
   const rowArr = Object.values(rows);
   const classes = useStyles();
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('first_name');
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(defaultRowsPerPage);
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('first_name');
+  const [selected, setSelected] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
+  const [filters, setFilters] = useState({});
 
   useEffect(() => {
     if (props.fetchRows) {
       props.fetchRows();
     }
   }, []);
+
+  // useEffect(() => {
+  //   setPage(0);
+  // }, [filters]);
 
   function handleRequestSort(event, property) {
     const isDesc = orderBy === property && order === 'desc';
@@ -111,7 +121,60 @@ export default function TableEnhanced(props) {
 
   const isSelected = id => selected.indexOf(id) !== -1;
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rowArr.length - page * rowsPerPage);
+  const sortedRows = stableSort(rowArr, getSorting(order, orderBy));
+  const filteredRows = sortedRows.filter(row => {
+    for (let filterName in filters) {
+      if (!row[filterName].toLowerCase().includes(filters[filterName].toLowerCase())) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
+  const rowsToRender = [];
+  for (let idx1 = page * rowsPerPage; rowsToRender.length < rowsPerPage && idx1 < filteredRows.length; idx1++) {
+    const row = filteredRows[idx1];
+    const isItemSelected = isSelected(row.id);
+    const labelId = `enhanced-table-checkbox-${idx1}`;
+
+    rowsToRender.push(
+      <TableRow
+        hover
+        onClick={event => handleClick(event, row.id)}
+        role="checkbox"
+        aria-checked={isItemSelected}
+        tabIndex={-1}
+        key={row.id}
+        selected={isItemSelected}
+      >
+        {
+          columnHeads.reduce((accu, head, idx2) => {
+            if (
+              !hiddenColumns.includes(head) &&
+              head !== "street_address" &&
+              head !== "city" &&
+              head !== "state" &&
+              head !== "zip"
+            ) {
+              accu.push(<TableCell key={idx2} className={classes.tableCell}>{row[head]}</TableCell>);
+            }
+
+            return accu;
+          }, [
+              <TableCell padding="checkbox" key="checkbox">
+                <Checkbox
+                  checked={isItemSelected}
+                  inputProps={{ 'aria-labelledby': labelId }}
+                />
+              </TableCell>
+            ])
+        }
+      </TableRow>
+    );
+  }
+
+  const emptyRows = rowsPerPage - rowsToRender.length;
 
   return (
     <Paper className={classes.paper}>
@@ -120,11 +183,13 @@ export default function TableEnhanced(props) {
         path={path}
         selected={selected}
         tableTitle={tableTitle}
+        setTableFilters={setFilters}
       />
       <div className={classes.tableWrapper}>
         <Table
           className={classes.table}
           aria-labelledby="tableTitle"
+          size="small"
         >
           <TableHeadEnhanced
             columnHeads={props.columnHeads}
@@ -136,44 +201,9 @@ export default function TableEnhanced(props) {
             rowCount={rowArr.length}
           />
           <TableBody>
-            {stableSort(rowArr, getSorting(order, orderBy))
-            // use for loop
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, idx) => {
-                const isItemSelected = isSelected(row.id);
-                const labelId = `enhanced-table-checkbox-${idx}`;
-
-                return (
-                  <TableRow
-                    hover
-                    onClick={event => handleClick(event, row.id)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isItemSelected}
-                  >
-                    {
-                      columnHeads.reduce((accu, head, idx) => {
-                        if (!hiddenColumns.includes(head)) {
-                          accu.push(<TableCell key={idx} >{row[head]}</TableCell>);
-                        }
-                        
-                        return accu;
-                      }, [
-                        <TableCell padding="checkbox" key="checkbox">
-                          <Checkbox
-                            checked={isItemSelected}
-                            inputProps={{ 'aria-labelledby': labelId }}
-                          />
-                        </TableCell>
-                      ])
-                    }
-                  </TableRow>
-                );
-              })}
+            {rowsToRender}
             {emptyRows > 0 && (
-              <TableRow style={{ height: 47.5 * emptyRows }}>
+              <TableRow style={{ height: 40 * emptyRows }}>
                 <TableCell colSpan={columnHeads.length + 1} />
               </TableRow>
             )}
@@ -183,7 +213,7 @@ export default function TableEnhanced(props) {
       <TablePagination
         rowsPerPageOptions={[]}
         component="div"
-        count={rowArr.length}
+        count={filteredRows.length}
         rowsPerPage={rowsPerPage}
         page={page}
         backIconButtonProps={{

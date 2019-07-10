@@ -1,9 +1,11 @@
 import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import {
   Button,
   Dialog,
   Tooltip,
+  Typography,
 } from '@material-ui/core';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
@@ -11,7 +13,7 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@material-ui/icons/Add';
-import Typography from '@material-ui/core/Typography';
+import { clearErrors } from '../../actions/patient_actions';
 import CreatePatientFormContainer from '../forms/patient_form_container';
 
 const styles = theme => ({
@@ -70,7 +72,9 @@ class CustomizedDialogs extends React.Component {
   };
 
   _handleClose = () => {
-    this.setState({ open: false });
+    this.setState({ open: false }, () => {
+      this.props.clearErrors();
+    });
   };
 
   _renderDialogContent = () => {
@@ -142,4 +146,10 @@ class CustomizedDialogs extends React.Component {
   }
 }
 
-export default CustomizedDialogs;
+CustomizedDialogs.defaultProps = {
+  clearErrors: () => null
+}
+
+export default connect(null, {
+  clearErrors
+})(CustomizedDialogs);

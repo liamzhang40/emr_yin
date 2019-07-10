@@ -9,10 +9,10 @@ import {
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import InfoIcon from '@material-ui/icons/Info';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import { Link } from 'react-router-dom';
 import { capitalize } from '../../utils/string_utils';
 import Dialog from '../dialog/dialog';
+import FilterMenu from '../menu/filter_menu';
 
 const useToolbarStyles = makeStyles(theme => ({
   root: {
@@ -41,9 +41,9 @@ const useToolbarStyles = makeStyles(theme => ({
   },
 }));
 
-const TableToolbarEnhanced = props => {
-  const { selected, tableTitle, path, deletePatients } = props;
+const TableToolbarEnhanced = ({ selected, tableTitle, path, deletePatients, setTableFilters }) => {
   const classes = useToolbarStyles();
+
   const numSelected = selected.length;
 
   const _handleDelete = () => {
@@ -93,11 +93,9 @@ const TableToolbarEnhanced = props => {
           </Fragment>
         ) : (
           <Fragment>
-            <Tooltip title="Filter list">
-              <IconButton aria-label="Filter list">
-                <FilterListIcon />
-              </IconButton>
-            </Tooltip>
+            <FilterMenu 
+              setTableFilters={setTableFilters}
+            />
             <Dialog 
               dialogType={tableTitle}
             />

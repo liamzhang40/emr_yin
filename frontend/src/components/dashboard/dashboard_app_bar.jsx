@@ -1,21 +1,16 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { 
   AppBar,
   Toolbar,
   IconButton,
-  ButtonBase,
   Typography,
   InputBase,
-  MenuItem,
-  Menu,
 } from '@material-ui/core';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import { Link } from 'react-router-dom';
-import { logout } from '../../actions/session_actions';
+import AccountMenu from '../menu/account_menu';
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -23,9 +18,6 @@ const useStyles = makeStyles(theme => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
-  },
-  profileButtonIcon: {
-    marginLeft: 5,
   },
   title: {
     display: 'none',
@@ -82,40 +74,8 @@ const useStyles = makeStyles(theme => ({
   // },
 }));
 
-const DashboardAppBar = ({ firstName, lastName, logout }) => {
+const DashboardAppBar = () => {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleProfileMenuOpen = event => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () =>  {
-    setAnchorEl(null);
-  };
-  
-  const handleLogout = () => {
-    logout();
-    handleMenuClose();
-  };
-
-  const isMenuOpen = Boolean(anchorEl);
-
-  const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      <MenuItem onClick={handleLogout}>Log out</MenuItem>
-    </Menu>
-  );
   
   return (
     <div className={classes.grow}>
@@ -149,17 +109,7 @@ const DashboardAppBar = ({ firstName, lastName, logout }) => {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <ButtonBase
-              // variant="contained"
-              color="inherit"
-              className={classes.profileButton}
-              onClick={handleProfileMenuOpen}
-            >
-              <Typography>
-                {`${firstName} ${lastName}`}
-              </Typography>
-              <AccountCircle className={classes.profileButtonIcon}/>
-            </ButtonBase>
+            <AccountMenu />
           </div>
           {/* <div className={classes.sectionMobile}>
             <IconButton
@@ -175,16 +125,8 @@ const DashboardAppBar = ({ firstName, lastName, logout }) => {
         </Toolbar>
       </AppBar>
       {/* {renderMobileMenu} */}
-      {renderMenu}
     </div>
   );
 };
 
-const mapStateToProps = state => ({
-  firstName: state.session.firstName,
-  lastName: state.session.lastName,
-});
-
-export default connect(mapStateToProps, {
-  logout
-})(DashboardAppBar);
+export default DashboardAppBar;
