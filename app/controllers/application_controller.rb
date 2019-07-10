@@ -1,27 +1,27 @@
 class ApplicationController < ActionController::API
-  helper_method :current_user, :logged_in?
-
-  def current_user
-    return nil unless session[:session_token]
-    @current_user ||= User.find_by(session_token: session[:session_token])
-  end
-
-  def logged_in?
-    !!current_user
-  end
 
   def login(user)
-    @current_user = user
-    session[:session_token] = user.reset_session_token!
-  end
-
-  def logout
-    current_user.reset_session_token!
-    session[:session_token] = nil
-    @current_user = nil
+    token = JSONWebToken.encode(user_id: user.id)
+    time = Time.now + 24.hours.to_i
+    render json: {
+      token: token,
+      exp: time.strftime("%Y-%m-%dT%H:%M"),
+      first_name: user.first_name,
+      last_name: user.last_name,
+    }
   end
 
   def require_login
-    render json: ['You Shall Not Pass'], status: 418 unless logged_in?
+    header = request.headers['Authorization']
+    header = header.split(" ").last if header
+
+    begin
+      @decoded = JSONWebToken.decode(header)
+      @current_user = User.find(@decoded[:user_id])
+    rescue ActiveRecord::RecordNotFound => e
+      render json: { errors: e.message }, status: 401
+    rescue JWT::DecodeError => e
+      render json: { errors: e.message }, status: 401
+    end
   end
 end

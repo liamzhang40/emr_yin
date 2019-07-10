@@ -5,31 +5,32 @@
 #  id              :bigint           not null, primary key
 #  first_name      :string           not null
 #  last_name       :string           not null
-#  username        :string           not null
+#  email           :string           not null
 #  password_digest :string           not null
-#  session_token   :string           not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #
 
 class User < ApplicationRecord
-  validates :first_name, :last_name, :username, :password_digest, :session_token, presence: true
-  validates :username, uniqueness: true
+  validates :first_name, :last_name, :email, :password_digest, presence: true
+  validates :email, uniqueness: true
+  # validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, length: { minimum: 6, allow_nil: true}
 
-  after_initialize :ensure_session_token
+  # has_secure_password
+
   attr_reader :password
 
-  def self.find_by_credentials(username, password)
-    user = User.find_by(username: username)
+  def self.find_by_credentials(email, password)
+    user = User.find_by(email: email)
     user && user.is_password?(password) ? user: nil
   end
 
-  def reset_session_token!
-    generate_session_token
-    self.save!
-    self.session_token
-  end
+  # def reset_session_token!
+  #   generate_session_token
+  #   self.save!
+  #   self.session_token
+  # end
 
   def password=(password)
     @password = password
@@ -40,20 +41,20 @@ class User < ApplicationRecord
     BCrypt::Password.new(self.password_digest).is_password?(password)
   end
 
-  private
+  # private
 
-  def ensure_session_token
-    generate_session_token unless self.session_token
-  end
+  # def ensure_session_token
+  #   generate_session_token unless self.session_token
+  # end
 
-  def generate_session_token
-    self.session_token = SecureRandom::urlsafe_base64
+  # def generate_session_token
+  #   self.session_token = SecureRandom::urlsafe_base64
 
-    # costly if user base is large
-    while User.find_by(session_token: self.session_token)
-      self.session_token = SecureRandom::urlsafe_base64
-    end
+  #   # costly if user base is large
+  #   while User.find_by(session_token: self.session_token)
+  #     self.session_token = SecureRandom::urlsafe_base64
+  #   end
 
-    self.session_token
-  end
+  #   self.session_token
+  # end
 end
