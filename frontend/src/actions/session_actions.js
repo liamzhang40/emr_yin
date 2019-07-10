@@ -38,44 +38,35 @@ export const logout = () => {
 };
 
 export const signup = user => dispatch => {
-  return sessionAPIUtil.signup(user).then(res => {
-    localStorage.setItem("emr_yin:sessionToken", res.token);
-    localStorage.setItem("emr_yin:sessionTokenExpiration", res.exp);
-    return dispatch(receiveCurrentSession(res));
+  return sessionAPIUtil.signup(user).then(({ data }) => {
+    localStorage.setItem("emr_yin:sessionToken", data.token);
+    localStorage.setItem("emr_yin:sessionTokenExpiration", data.exp);
+    dispatch(receiveCurrentSession(data));
   }).catch(err => {
-    return err.then(errMessages => {
-      dispatch(receiveErrors(errMessages));
+    dispatch(receiveErrors(err.response.data));
 
-      // stop next then for now
-      return false;
-    });
+    throw err;
   });
 };
 
 export const login = user => dispatch => {
-  return sessionAPIUtil.login(user).then(res => {
-    localStorage.setItem("emr_yin:sessionToken", res.token);
-    localStorage.setItem("emr_yin:sessionTokenExpiration", res.exp);
-    return dispatch(receiveCurrentSession(res));
+  return sessionAPIUtil.login(user).then(({ data }) => {
+    localStorage.setItem("emr_yin:sessionToken", data.token);
+    localStorage.setItem("emr_yin:sessionTokenExpiration", data.exp);
+    dispatch(receiveCurrentSession(data));
   }).catch(err => {
-    return err.then(errMessages => {
-      dispatch(receiveErrors(errMessages));
+    dispatch(receiveErrors(err.response.data));
 
-      // stop next then for now
-      return false;
-    });  
+    throw err;
   });
 };
 
 export const fetchCurrentUser = () => dispatch => {
-  return sessionAPIUtil.fetchCurrentUser().then(res => {
-    return dispatch(receiveCurrentSession(res));
+  return sessionAPIUtil.fetchCurrentUser().then(({ data }) => {
+    dispatch(receiveCurrentSession(data));
   }).catch(err => {
-    return err.then(() => {
-      dispatch(clearSession());
+    dispatch(clearSession());
 
-      // stop next then for now
-      return false;
-    });
+    throw err;
   });
 };

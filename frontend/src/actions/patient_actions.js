@@ -40,66 +40,45 @@ export const clearErrors = () => {
 };
 
 export const createPatient = patient => dispatch => {
-  return patientAPIUtil.createPatient(patient).then(res => {
-    return dispatch(receivePatient(res));
+  return patientAPIUtil.createPatient(patient).then(({ data }) => {
+    dispatch(receivePatient(data));
   }).catch(err => {
-    return err.then((errMessages) => {
-      dispatch(receiveErrors(errMessages));
+    dispatch(receiveErrors(err.response.data));
 
-      // stop next then for now
-      return false;
-    });
+    throw err;
   });
 };
 
 export const deletePatients = patientIds => dispatch => {
   return patientAPIUtil.deletePatients(patientIds).then(() => {
-    return dispatch(removePatients(patientIds));
+    dispatch(removePatients(patientIds));
   }).catch(err => {
-    return err.then((errMessages) => {
-      dispatch(receiveErrors(errMessages));
-
-      // stop next then for now
-      return false;
-    });
+    console.log(err);
   });
 };
 
 export const fetchAllPatients = () => dispatch => {
-  return patientAPIUtil.fetchAllPatients().then(res => {
-    return dispatch(receiveAllPatients(res));
+  return patientAPIUtil.fetchAllPatients().then(({ data }) => {
+    dispatch(receiveAllPatients(data));
   }).catch(err => {
-    return err.then((errMessages) => {
-      dispatch(receiveErrors(errMessages));
-
-      // stop next then for now
-      return false;
-    });
+    console.log(err);
   });
 };
 
 export const fetchPatient = patientId => dispatch => {
-  return patientAPIUtil.fetchPatient(patientId).then(res => {
-    return dispatch(receivePatient(res));
+  return patientAPIUtil.fetchPatient(patientId).then(({ data }) => {
+    dispatch(receivePatient(data));
   }).catch(err => {
-    return err.then((errMessages) => {
-      dispatch(receiveErrors(errMessages));
-
-      // stop next then for now
-      return false;
-    });
+    console.log(err);
   });
 };
 
 export const updatePatient = patient => dispatch => {
-  return patientAPIUtil.updatePatient(patient).then(res => {
-    return dispatch(receivePatient(res));
+  return patientAPIUtil.updatePatient(patient).then(({ data }) => {
+    dispatch(receivePatient(data));
   }).catch(err => {
-    return err.then((errMessages) => {
-      dispatch(receiveErrors(errMessages));
+    dispatch(receiveErrors(err.response.data));
 
-      // stop next then for now
-      return false;
-    });
+    throw err;
   });
 };

@@ -61,10 +61,8 @@ class UserForm extends Component {
   _handleSubmit = e => {
     e.preventDefault();
 
-    this.props.processForm(this.state).then(res => {
-      if (res) {
-        this.props.history.push('/')
-      }
+    this.props.processForm(this.state).then(()=> {
+      this.props.history.push('/')
     })
   }
 

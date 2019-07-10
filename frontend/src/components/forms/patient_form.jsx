@@ -40,10 +40,8 @@ class PatienForm extends Component {
   componentDidMount() {
     const { fetchPatient, match, patient } = this.props;
 
-    if (!Object.keys(patient).length && fetchPatient) fetchPatient(match.params.patientId).then(res => {
-      if (res) {
-        this.setState(this._initializeFields());
-      }
+    if (!Object.keys(patient).length && fetchPatient) fetchPatient(match.params.patientId).then(() => {
+      this.setState(this._initializeFields());
     });
   }
 
@@ -65,10 +63,8 @@ class PatienForm extends Component {
     const patient = {...this.state};
     if (this.props.patient) patient.id = this.props.patient.id;
 
-    this.props.processForm(patient).then(res => {
-      if (res) {
-        if (this.props.closeModal) this.props.closeModal();
-      }
+    this.props.processForm(patient).then(() => {
+      if (this.props.closeModal) this.props.closeModal();
     });
   }
 

@@ -27,5 +27,10 @@ export const fetchCurrentUser = () => (
 export const hasCurrentUser = () => {
   const exp = localStorage.getItem("emr_yin:sessionTokenExpiration");
   const token = localStorage.getItem("emr_yin:sessionToken");
-  return token && exp && moment().isBefore(moment(exp));
+  const stillEffective = moment().isBefore(moment(exp));
+  if (!stillEffective) {
+    localStorage.removeItem("emr_yin:sessionToken");
+    localStorage.removeItem("emr_yin:sessionTokenExpiration");
+  }
+  return token && exp && stillEffective;
 };

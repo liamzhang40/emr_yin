@@ -1,0 +1,1 @@
+json.extract! visit, :id, :patient_id, :purpose_of_visit, :visit_details, :appointment_time,
