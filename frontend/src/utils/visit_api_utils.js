@@ -15,11 +15,10 @@ export const deleteVisits = visitIds => (
   })
 );
 
-
 export const fetchAllVisits = patientId => (
   myFetch({
-    url: `api/visits/${patientId}`,
-    method: 'GET',
+    url: `api/patients/${patientId}/visits`,
+    method: 'GET'
   })
 );
 

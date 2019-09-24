@@ -7,7 +7,7 @@ import {
 
 const mapStateToProps = state => ({
   rows: state.entities.patients,
-  columnHeads: state.entities.columnHeads,
+  columnHeads: state.entities.columnHeads.patient,
   defaultRowsPerPage: Math.floor((window.innerHeight - 64 - 20 - 64 - 48 - 56 - 20) / 40),
   tableTitle: 'patient',
   path: '/patient/',

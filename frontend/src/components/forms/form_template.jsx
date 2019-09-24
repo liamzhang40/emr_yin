@@ -63,6 +63,7 @@ export default function Form ({
                 shrink: true,
               }}
               name={fieldName}
+              multiline={Boolean(fields[fieldName].multiline)}
               onChange={handleChange(fieldName)}
               required={fields[fieldName].required}
               type={fields[fieldName].type}

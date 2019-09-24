@@ -9,7 +9,7 @@ import {
   Typography,
   Popover,
 } from '@material-ui/core';
-import { hiddenColumns } from '../../utils/table_utils';
+import { hiddenColumns } from '../../constants/constant';
 import { snakeToTitle } from '../../utils/string_utils';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
@@ -114,8 +114,8 @@ const FilterMenu = ({ setTableFilters, columnHeads }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  columnHeads: state.entities.columnHeads,
+const mapStateToProps = (state, ownProps) => ({
+  columnHeads: state.entities.columnHeads[ownProps.filterType],
 });
 
 export default connect(mapStateToProps, {

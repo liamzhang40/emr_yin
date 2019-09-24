@@ -6,7 +6,10 @@ Rails.application.routes.draw do
     get '/auth/profile', to: 'authentication#profile'
     
     resources :users, only: [:create, :update, :index, :show]
-    resources :patients, only: [:create, :update, :index, :show, :destroy]
-    resources :visits, only: [:create, :update, :index, :show, :destroy]
+    resources :patients, only: [:create, :update, :index, :show, :destroy] do 
+      resources :visits, only: [:index]
+    end
+    resources :visits, only: [:create, :update, :show, :destroy]
+
   end
 end

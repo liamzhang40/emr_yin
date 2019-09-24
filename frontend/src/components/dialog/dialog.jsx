@@ -14,7 +14,9 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@material-ui/icons/Add';
 import { clearErrors } from '../../actions/patient_actions';
-import CreatePatientFormContainer from '../forms/patient_form_container';
+import { clearErrors } from '../../actions/patient_actions';
+import PatientFormContainer from '../forms/patient_form_container';
+import VisitFormContainer from '../forms/visit_form_container';
 
 const styles = theme => ({
   root: {
@@ -90,7 +92,7 @@ class CustomizedDialogs extends React.Component {
               </IconButton>
             </Tooltip>,
           dialogTitle: "New Patient",
-          dialogContent: <CreatePatientFormContainer 
+          dialogContent: <PatientFormContainer 
             formType="createPatient" 
             closeModal={this._handleClose}
           />,
@@ -104,6 +106,10 @@ class CustomizedDialogs extends React.Component {
               </IconButton>
             </Tooltip>,
           dialogTitle: "New Visit",
+          dialogContent: <VisitFormContainer 
+            formType="createVisit"
+            closeModal={this._handleClose}
+          />
         }
       default:
         return {
@@ -148,6 +154,21 @@ class CustomizedDialogs extends React.Component {
 
 CustomizedDialogs.defaultProps = {
   clearErrors: () => null
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const { dialogType } = ownProps;
+
+  switch(dialogType) {
+    case "patient":
+      return {
+        clearErrors: () => dispatch()
+      }
+    case "visit":
+
+    default:
+      return {};
+  }
 }
 
 export default connect(null, {

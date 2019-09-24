@@ -95,6 +95,7 @@ const TableToolbarEnhanced = ({ selected, tableTitle, path, deletePatients, setT
           <Fragment>
             <FilterMenu 
               setTableFilters={setTableFilters}
+              filterType={tableTitle}
             />
             <Dialog 
               dialogType={tableTitle}

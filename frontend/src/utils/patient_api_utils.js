@@ -15,7 +15,6 @@ export const deletePatients = patientIds => (
   })
 );
 
-
 export const fetchAllPatients = () => (
   myFetch({
     url: 'api/patients',

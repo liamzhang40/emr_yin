@@ -11,7 +11,7 @@ const errorPatientErrorReducer = (state = {}, action) => {
       return action.errors;
     case CLEAR_PATIENT_ERRORS:
     case RECEIVE_PATIENT:
-      return [];
+      return {};
     default:
       return state;
   }

@@ -1,11 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { 
+import {
   Paper,
   Typography,
   Button,
   Grid,
- } from '@material-ui/core';
+} from '@material-ui/core';
 import FormTemplate from './form_template';
 import VisitTableContainer from '../table/visit_table_container';
 
@@ -22,25 +22,25 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'space-between',
   },
-  createPatient: {
+  createVisit: {
     width: '100%'
   },
-  updatePatient: {
+  updateVisit: {
     width: '48%'
   },
 });
 
-class PatienForm extends Component {
+class VisitForm extends Component {
   constructor(props) {
     super(props);
 
     this.state = this._initializeFields();
-  } 
+  }
 
   componentDidMount() {
-    const { fetchPatient, match, patient } = this.props;
+    const { fetchVisit, match, visit } = this.props;
 
-    if (!Object.keys(patient).length && fetchPatient) fetchPatient(match.params.patientId).then(() => {
+    if (!Object.keys(visit).length && fetchVisit) fetchVisit(match.params.visitId).then(() => {
       this.setState(this._initializeFields());
     });
   }
@@ -60,27 +60,27 @@ class PatienForm extends Component {
   _handleSubmit = (e) => {
     e.preventDefault();
 
-    const patient = {...this.state};
-    if (this.props.patient) patient.id = this.props.patient.id;
+    const visit = { ...this.state };
+    if (this.props.visit) visit.id = this.props.visit.id;
 
-    this.props.processForm(patient).then(() => {
+    this.props.processForm(visit).then(() => {
       if (this.props.closeModal) this.props.closeModal();
     });
   }
 
   render() {
-    const { 
-      classes, 
+    const {
+      classes,
       errors,
-      fields, 
-      formTitle, 
-      formType, 
+      fields,
+      formTitle,
+      formType,
       match,
       history,
-      submitText, 
+      submitText,
     } = this.props;
-    
-    return formType === 'createPatient' ? 
+
+    return formType === 'createVisit' ?
       (
         <div className={classes.formBody}>
           <form className={classes[formType]}>
@@ -113,7 +113,7 @@ class PatienForm extends Component {
           </Typography>
           <div className={classes.formBody}>
             <form className={classes[formType]}>
-              <FormTemplate 
+              <FormTemplate
                 fields={fields}
                 parentState={this.state}
                 handleChange={this._handleChange}
@@ -134,8 +134,8 @@ class PatienForm extends Component {
               </Grid>
             </form>
             <Fragment>
-              <div style={{ width: '48%'}}>
-                <VisitTableContainer match={match} history={history}/>
+              <div style={{ width: '48%' }}>
+                <VisitTableContainer match={match} history={history} />
               </div>
             </Fragment>
           </div>
@@ -144,4 +144,4 @@ class PatienForm extends Component {
   }
 }
 
-export default withStyles(styles)(PatienForm);
+export default withStyles(styles)(VisitForm);

@@ -9,7 +9,7 @@ import {
   TableSortLabel,
   Checkbox,
 } from '@material-ui/core';
-import { hiddenColumns } from '../../utils/table_utils';
+import { hiddenColumns } from '../../constants/constant';
 import { snakeToTitle } from '../../utils/string_utils';
 
 // const headRows = [

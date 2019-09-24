@@ -10,7 +10,8 @@ import {
   Paper,
   Checkbox,
 } from '@material-ui/core';
-import { hiddenColumns } from '../../utils/table_utils';
+import { parseTabelCellText } from '../../utils/table_utils';
+import { hiddenColumns } from '../../constants/constant';
 import TableHeadEnhanced from './table_head';
 import TableToolbarEnhanced from './table_toolbar';
 
@@ -43,7 +44,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
   },
   table: {
-    minWidth: 750,
+    // minWidth: 750,
   },
   tableWrapper: {
     overflowX: 'auto',
@@ -56,7 +57,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function TableEnhanced(props) {
-  const { rows, columnHeads, defaultRowsPerPage, tableTitle, path, deletePatients } = props;
+  const { rows, columnHeads, defaultRowsPerPage, tableTitle, path, deletePatients, history } = props;
   const rowArr = Object.values(rows);
   const classes = useStyles();
   const [order, setOrder] = useState('asc');
@@ -119,6 +120,12 @@ export default function TableEnhanced(props) {
     setRowsPerPage(+event.target.value);
   }
 
+  function handleNavigation (rowId) {
+    return function () {
+      history.push(`${path}${rowId}`);
+    };
+  }
+
   const isSelected = id => selected.indexOf(id) !== -1;
 
   const sortedRows = stableSort(rowArr, getSorting(order, orderBy));
@@ -147,6 +154,7 @@ export default function TableEnhanced(props) {
         tabIndex={-1}
         key={row.id}
         selected={isItemSelected}
+        onDoubleClick={handleNavigation(row.id)}
       >
         {
           columnHeads.reduce((accu, head, idx2) => {
@@ -157,7 +165,11 @@ export default function TableEnhanced(props) {
               head !== "state" &&
               head !== "zip"
             ) {
-              accu.push(<TableCell key={idx2} className={classes.tableCell}>{row[head]}</TableCell>);
+              accu.push(
+                <TableCell key={idx2} className={classes.tableCell}>
+                  {parseTabelCellText(head, row[head])}
+                </TableCell>
+              );
             }
 
             return accu;

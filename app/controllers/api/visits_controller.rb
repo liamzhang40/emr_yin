@@ -22,7 +22,7 @@ class Api::VisitsController < ApplicationController
   end
 
   def index
-    @visits = Patient.find(params[:id]).visits
+    @visits = Patient.find(params[:patient_id]).visits
     @columns = Visit.column_names
     render 'api/visits/index'
   end

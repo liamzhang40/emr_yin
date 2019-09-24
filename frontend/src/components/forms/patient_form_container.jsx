@@ -4,7 +4,7 @@ import {
   updatePatient,
   createPatient,
 } from '../../actions/patient_actions';
-import { states } from '../../utils/table_utils';
+import { states } from '../../constants/constant';
 import PatientForm from './patient_form';
 
 const mapStateToProps = (state, ownProps) => {

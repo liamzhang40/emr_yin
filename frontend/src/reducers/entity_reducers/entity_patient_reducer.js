@@ -1,14 +1,11 @@
 import { merge } from 'lodash';
-// import {
-//   RECEIVE_CURRENT_USER
-// } from '../actions/session_actions';
 import {
   RECEIVE_ALL_PATIENTS,
   RECEIVE_PATIENT,
   REMOVE_PATIENT,
 } from '../../actions/patient_actions';
 
-const entityUsersReducer = (state = {}, action) => {
+const entityPatientsReducer = (state = {}, action) => {
   Object.freeze(state);
   switch (action.type) {
     case RECEIVE_ALL_PATIENTS:
@@ -26,4 +23,4 @@ const entityUsersReducer = (state = {}, action) => {
   }
 };
 
-export default entityUsersReducer;
+export default entityPatientsReducer;
