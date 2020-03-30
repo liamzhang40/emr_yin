@@ -1,5 +1,7 @@
 # README
 
+[![Coverage Status](https://coveralls.io/repos/github/liamzhang40/emr_yin/badge.svg?branch=master)](https://coveralls.io/github/liamzhang40/emr_yin?branch=master)
+
 This README would normally document whatever steps are necessary to get the
 application up and running.
 
